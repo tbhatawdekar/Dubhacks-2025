@@ -40,3 +40,5 @@ coverage/
 # Cache
 .cache/
 .next/cache/
+
+__pycache__/

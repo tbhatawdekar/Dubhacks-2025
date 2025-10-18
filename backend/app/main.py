@@ -1,8 +1,25 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from .config import ALLOWED_ORIGINS
+from .routers.transcribe import router as transcribe_router
 
+app = FastAPI(
+    title="Smart Interview Coach",
+    description="A FastAPI application  ",
+    version="1.0.0"
+)
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify your frontend domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(transcribe_router, prefix="/api")
+
+@app.get("/health")
+def health():
+    return {"ok": True}
