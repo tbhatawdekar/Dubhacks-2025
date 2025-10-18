@@ -4,64 +4,34 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  padding: 12px 24px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-  gap: 16px;
-}
-
-.logo {
-  width: 32px;
-  height: 32px;
-  background-color: #3b82f6;
-  border-radius: 4px;
-}
-
-.title {
-  flex: 1;
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.date {
-  font-size: 14px;
-  color: #6b7280;
+  margin-top: 100px;
 }
 
 .main {
   display: flex;
-  flex: 1;
+  justify-content: center; /* center content horizontally */
   padding: 24px;
-  gap: 24px;
-}
-
-.left {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  height: calc(100vh - 100px); /* account for header */
+  flex-direction: row; /* stack vertically if needed */
+  gap: 15px;
 }
 
 .camera {
-  flex: 1;
+  width: 100%;
+  max-width: 1000px; /* optional max width */
+  height: 400px; /* fixed height */
   background-color: #3b82f6;
   border-radius: 8px;
-  min-height: 300px;
 }
 
 .transcript {
-  flex: 1;
+  width: 45%;
+  height: fit-content;
   background-color: #ffffff;
   border-radius: 8px;
-  padding: 16px;
+  padding: 5px 20px 20px 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   overflow-y: auto;
-  max-height: 300px;
 }
 
 .transcriptText {
@@ -77,20 +47,21 @@
   color: #3b82f6;
 }
 
-.right {
+.analyticsSection {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.analyticsSection {
+  height: fit-content;
   background-color: #ffffff;
   border-radius: 8px;
-  padding: 16px;
+  padding: 5px 20px 20px 20px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   font-size: 14px;
   line-height: 1.5;
+}
+
+.analyticsItems {
+  gap: 10px;
 }
 
 .analyticsItem {

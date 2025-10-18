@@ -16,12 +16,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-[#0A192F] text-white min-h-screen flex flex-col">
+      <body>
         {/* Navbar always on top */}
         <Navbar />
 
         {/* Page content */}
-        <main className="flex-1 pt-20 px-4 md:px-8">{children}</main>
+        <main>{children}</main>
       </body>
     </html>
   );

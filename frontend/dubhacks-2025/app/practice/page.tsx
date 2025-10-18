@@ -2,29 +2,20 @@ import React from "react";
 import styles from "../styles/practice.module.css";
 
 const Practice: React.FC = () => {
-  return (
-    <div className={styles.page}>
-      {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.logo}>YourLogo</div>
-        <h2 className={styles.title}>All Hands Meeting Rehearsal</h2>
-        <span className={styles.date}>OCT 7, 2021 12:35PM</span>
-      </header>
+  const isRecording = false; // Simulated recording state
 
-      {/* Main content */}
-      <div className={styles.main}>
-        {/* Left: Camera + Transcript */}
-        <div className={styles.left}>
-          {/* Camera placeholder */}
-          <div className={styles.camera}></div>
-
+  if (!isRecording) {
+    return (
+      <div className={styles.page}>
+        {/* Main content */}
+        <div className={styles.main}>
           {/* Transcript */}
           <div className={styles.transcript}>
             <h3>Transcript</h3>
             <div className={styles.transcriptText}>
               <p>
                 <strong>00:01 Introduction</strong>
-              </p>
+                </p>
               <p>
                 Hi <span className={styles.blueText}>um</span> everyone. I am
                 really excited to talk to you about our product launch. Yoodli
@@ -36,29 +27,38 @@ const Practice: React.FC = () => {
               </p>
             </div>
           </div>
-        </div>
 
-        {/* Right: Analytics */}
-        <div className={styles.right}>
+          {/* Right: Analytics */}
           <div className={styles.analyticsSection}>
-            <h4>Analytics</h4>
-            <div className={styles.analyticsItem}>
-              <strong>Filler Words:</strong> Down by 15%
-            </div>
-            <div className={styles.analyticsItem}>
-              <strong>Eye Contact:</strong> Up by 5% (45% of the time)
-            </div>
-            <div className={styles.analyticsItem}>
-              <strong>Gestures:</strong> Repeated hand movements detected
-            </div>
-            <div className={styles.analyticsItem}>
-              <strong>Uptalk:</strong> Up by 10%
-            </div>
-            <div className={styles.analyticsItem}>
-              <strong>Speech Takeaways:</strong> Large fear of public speaking
+            <div className={styles.analyticsItems}>
+              <h3>Analytics</h3>
+              <div className={styles.analyticsItem}>
+                <strong>Filler Words:</strong> Down by 15%
+              </div>
+              <div className={styles.analyticsItem}>
+                <strong>Eye Contact:</strong> Up by 5% (45% of the time)
+              </div>
+              <div className={styles.analyticsItem}>
+                <strong>Gestures:</strong> Repeated hand movements detected
+              </div>
+              <div className={styles.analyticsItem}>
+                <strong>Uptalk:</strong> Up by 10%
+              </div>
+              <div className={styles.analyticsItem}>
+                <strong>Speech Takeaways:</strong> Large fear of public speaking
+              </div>
             </div>
           </div>
         </div>
+      </div>
+    );
+  } else return (
+    <div className={styles.page}>
+
+      {/* Main content */}
+      <div className={styles.main}>
+        {/* Camera placeholder */}
+        <div className={styles.camera}></div>
       </div>
     </div>
   );
