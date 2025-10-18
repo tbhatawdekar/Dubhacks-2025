@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import logo from "./llogo.png";
+import logo from "./hlogo.png";
 import { usePathname } from "next/navigation";
-import styles from "./Navbar.module.css";
+import styles from "../styles/navbar.module.css";
 
 export default function Navbar() {
   const pathname = usePathname();
