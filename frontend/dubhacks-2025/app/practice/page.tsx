@@ -1,23 +1,76 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from "../styles/practice.module.css";
 import { transcribeAudio } from "../utils/audioAPI";
 
 const Practice: React.FC = () => {
-  const [isRecording, setIsRecording] = useState(true);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isRecordingComplete, setIsRecordingComplete] = useState(false);
   const [chunks, setChunks] = useState<Blob[]>([]);
-  const [transcript, setTranscript] = useState("");
+  const [transcript, setTranscript] = useState("this is the og transcript");
   const [loading, setLoading] = useState(false);
 
-  const startRecording = () => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  const startRecording = async () => {
     setIsRecording(true);
+    setIsRecordingComplete(false);
+    setIsPaused(false);
+    setChunks([]);
+    setTranscript("");
+
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+    streamRef.current = stream;
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.play();
+    }
+
+    const audioStream = new MediaStream(stream.getAudioTracks());
+    mediaRecorderRef.current = new MediaRecorder(audioStream, { mimeType: "audio/webm;codecs=opus" });
+
+    mediaRecorderRef.current.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        setChunks((prev) => [...prev, event.data]);
+      }
+    };
+
+    mediaRecorderRef.current.start();
+  };
+
+  const pauseRecording = () => {
+    if (!mediaRecorderRef.current) return;
+
+    if (isPaused) {
+      mediaRecorderRef.current.resume();
+      setIsPaused(false);
+    } else {
+      mediaRecorderRef.current.pause();
+      setIsPaused(true);
+    }
+  };
+
+  const rerecord = () => {
+    // stop current recording and reset
+    mediaRecorderRef.current?.stop();
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    setIsRecording(false);
+    setIsPaused(false);
     setChunks([]);
     setTranscript("");
   };
 
   const stopRecording = async () => {
     setIsRecording(false);
+    setIsRecordingComplete(true);
+    mediaRecorderRef.current?.stop();
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+
     const blob = new Blob(chunks, { type: "audio/webm;codecs=opus" });
     setLoading(true);
 
@@ -35,9 +88,34 @@ const Practice: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.main}>
-        {isRecording ? (
-          <div className={styles.camera}>
-            <p style={{ color: "white", textAlign: "center", paddingTop: "180px" }}>
+        {!isRecordingComplete ? (
+          <div className={styles.camera} style={{ position: "relative" }}>
+            <video
+              ref={videoRef}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              muted
+            />
+            {/* Overlay buttons */}
+            <div style={{
+              position: "absolute",
+              bottom: "20px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              display: "flex",
+              gap: "10px"
+            }}>
+              <button onClick={pauseRecording}>{isPaused ? "Resume" : "Pause"}</button>
+              <button onClick={stopRecording}>Stop</button>
+              <button onClick={rerecord}>Rerecord</button>
+            </div>
+            <p style={{
+              position: "absolute",
+              top: "20px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              color: "white",
+              fontWeight: "bold"
+            }}>
               Recording...
             </p>
           </div>
@@ -54,7 +132,7 @@ const Practice: React.FC = () => {
           </div>
         )}
 
-        {!isRecording && (
+        {isRecordingComplete && (
           <div className={styles.analyticsSection}>
             <div className={styles.analyticsItems}>
               <h3>Analytics</h3>
@@ -68,13 +146,11 @@ const Practice: React.FC = () => {
         )}
       </div>
 
-      <div className={styles.recordButton}>
-        {!isRecording ? (
+      {isRecordingComplete && (
+        <div className={styles.recordButton}>
           <button onClick={startRecording}>Start Recording</button>
-        ) : (
-          <button onClick={stopRecording}>Stop Recording</button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
