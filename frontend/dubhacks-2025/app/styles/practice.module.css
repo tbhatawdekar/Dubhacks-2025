@@ -17,9 +17,8 @@
 }
 
 .camera {
-  width: 100%;
-  max-width: 1000px; /* optional max width */
-  height: 400px; /* fixed height */
+  width: 90%;
+  height: 90%; /* fixed height */
   background-color: #3b82f6;
   border-radius: 8px;
 }
