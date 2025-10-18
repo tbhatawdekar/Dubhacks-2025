@@ -67,3 +67,26 @@
 .analyticsItem {
   margin-bottom: 8px;
 }
+
+.recordButton {
+  background-color: #3b82f6; /* blue button */
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  margin-bottom: 16px; /* space from main content */
+}
+
+.recordButton:hover {
+  background-color: #2563eb; /* darker blue on hover */
+  transform: translateY(-1px);
+}
+
+.recordButton:active {
+  background-color: #1d4ed8; /* even darker on click */
+  transform: translateY(0px);
+}

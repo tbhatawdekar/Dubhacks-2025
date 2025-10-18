@@ -1,64 +1,79 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import styles from "../styles/practice.module.css";
+import { transcribeAudio } from "../utils/audioAPI";
 
 const Practice: React.FC = () => {
-  const isRecording = false; // Simulated recording state
+  const [isRecording, setIsRecording] = useState(true);
+  const [chunks, setChunks] = useState<Blob[]>([]);
+  const [transcript, setTranscript] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  if (!isRecording) {
-    return (
-      <div className={styles.page}>
-        {/* Main content */}
-        <div className={styles.main}>
-          {/* Transcript */}
+  const startRecording = () => {
+    setIsRecording(true);
+    setChunks([]);
+    setTranscript("");
+  };
+
+  const stopRecording = async () => {
+    setIsRecording(false);
+    const blob = new Blob(chunks, { type: "audio/webm;codecs=opus" });
+    setLoading(true);
+
+    try {
+      const data = await transcribeAudio(blob);
+      setTranscript(data.transcript);
+    } catch (err) {
+      console.error(err);
+      alert("Service busy; please retry.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className={styles.page}>
+      <div className={styles.main}>
+        {isRecording ? (
+          <div className={styles.camera}>
+            <p style={{ color: "white", textAlign: "center", paddingTop: "180px" }}>
+              Recording...
+            </p>
+          </div>
+        ) : (
           <div className={styles.transcript}>
             <h3>Transcript</h3>
-            <div className={styles.transcriptText}>
-              <p>
-                <strong>00:01 Introduction</strong>
-                </p>
-              <p>
-                Hi <span className={styles.blueText}>um</span> everyone. I am
-                really excited to talk to you about our product launch. Yoodli
-                helps you practice and improve your presentation skills without
-                the pressure of an audience,{" "}
-                <span className={styles.darkBlueText}>you know what I mean?</span>{" "}
-                You can get <span className={styles.blueText}>like</span> AI
-                powered feedback on your speech at www.yoodli.ai.
-              </p>
-            </div>
+            {loading ? (
+              <p>Loading transcript...</p>
+            ) : (
+              <div className={styles.transcriptText}>
+                {transcript ? <p>{transcript}</p> : <p><strong>00:01 Introduction</strong></p>}
+              </div>
+            )}
           </div>
+        )}
 
-          {/* Right: Analytics */}
+        {!isRecording && (
           <div className={styles.analyticsSection}>
             <div className={styles.analyticsItems}>
               <h3>Analytics</h3>
-              <div className={styles.analyticsItem}>
-                <strong>Filler Words:</strong> Down by 15%
-              </div>
-              <div className={styles.analyticsItem}>
-                <strong>Eye Contact:</strong> Up by 5% (45% of the time)
-              </div>
-              <div className={styles.analyticsItem}>
-                <strong>Gestures:</strong> Repeated hand movements detected
-              </div>
-              <div className={styles.analyticsItem}>
-                <strong>Uptalk:</strong> Up by 10%
-              </div>
-              <div className={styles.analyticsItem}>
-                <strong>Speech Takeaways:</strong> Large fear of public speaking
-              </div>
+              <div className={styles.analyticsItem}><strong>Filler Words:</strong> Down by 15%</div>
+              <div className={styles.analyticsItem}><strong>Eye Contact:</strong> Up by 5% (45% of the time)</div>
+              <div className={styles.analyticsItem}><strong>Gestures:</strong> Repeated hand movements detected</div>
+              <div className={styles.analyticsItem}><strong>Uptalk:</strong> Up by 10%</div>
+              <div className={styles.analyticsItem}><strong>Speech Takeaways:</strong> Large fear of public speaking</div>
             </div>
           </div>
-        </div>
+        )}
       </div>
-    );
-  } else return (
-    <div className={styles.page}>
 
-      {/* Main content */}
-      <div className={styles.main}>
-        {/* Camera placeholder */}
-        <div className={styles.camera}></div>
+      <div className={styles.recordButton}>
+        {!isRecording ? (
+          <button onClick={startRecording}>Start Recording</button>
+        ) : (
+          <button onClick={stopRecording}>Stop Recording</button>
+        )}
       </div>
     </div>
   );
