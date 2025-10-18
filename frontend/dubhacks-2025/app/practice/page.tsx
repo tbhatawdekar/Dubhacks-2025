@@ -1,65 +1,156 @@
-import React from "react";
+"use client";
+
+import React, { useState, useRef } from "react";
 import styles from "../styles/practice.module.css";
+import { transcribeAudio } from "../utils/audioAPI";
 
 const Practice: React.FC = () => {
+  const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isRecordingComplete, setIsRecordingComplete] = useState(false);
+  const [chunks, setChunks] = useState<Blob[]>([]);
+  const [transcript, setTranscript] = useState("this is the og transcript");
+  const [loading, setLoading] = useState(false);
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  const startRecording = async () => {
+    setIsRecording(true);
+    setIsRecordingComplete(false);
+    setIsPaused(false);
+    setChunks([]);
+    setTranscript("");
+
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+    streamRef.current = stream;
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.play();
+    }
+
+    const audioStream = new MediaStream(stream.getAudioTracks());
+    mediaRecorderRef.current = new MediaRecorder(audioStream, { mimeType: "audio/webm;codecs=opus" });
+
+    mediaRecorderRef.current.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        setChunks((prev) => [...prev, event.data]);
+      }
+    };
+
+    mediaRecorderRef.current.start();
+  };
+
+  const pauseRecording = () => {
+    if (!mediaRecorderRef.current) return;
+
+    if (isPaused) {
+      mediaRecorderRef.current.resume();
+      setIsPaused(false);
+    } else {
+      mediaRecorderRef.current.pause();
+      setIsPaused(true);
+    }
+  };
+
+  const rerecord = () => {
+    // stop current recording and reset
+    mediaRecorderRef.current?.stop();
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    setIsRecording(false);
+    setIsPaused(false);
+    setChunks([]);
+    setTranscript("");
+  };
+
+  const stopRecording = async () => {
+    setIsRecording(false);
+    setIsRecordingComplete(true);
+    mediaRecorderRef.current?.stop();
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+
+    const blob = new Blob(chunks, { type: "audio/webm;codecs=opus" });
+    setLoading(true);
+
+    try {
+      const data = await transcribeAudio(blob);
+      setTranscript(data.transcript);
+    } catch (err) {
+      console.error(err);
+      alert("Service busy; please retry.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles.page}>
-      {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.logo}>YourLogo</div>
-        <h2 className={styles.title}>All Hands Meeting Rehearsal</h2>
-        <span className={styles.date}>OCT 7, 2021 12:35PM</span>
-      </header>
-
-      {/* Main content */}
       <div className={styles.main}>
-        {/* Left: Camera + Transcript */}
-        <div className={styles.left}>
-          {/* Camera placeholder */}
-          <div className={styles.camera}></div>
-
-          {/* Transcript */}
+        {!isRecordingComplete ? (
+          <div className={styles.camera} style={{ position: "relative" }}>
+            <video
+              ref={videoRef}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              muted
+            />
+            {/* Overlay buttons */}
+            <div style={{
+              position: "absolute",
+              bottom: "20px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              display: "flex",
+              gap: "10px"
+            }}>
+              <button onClick={pauseRecording}>{isPaused ? "Resume" : "Pause"}</button>
+              <button onClick={stopRecording}>Stop</button>
+              <button onClick={rerecord}>Rerecord</button>
+            </div>
+            <p style={{
+              position: "absolute",
+              top: "20px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              color: "white",
+              fontWeight: "bold"
+            }}>
+              Recording...
+            </p>
+          </div>
+        ) : (
           <div className={styles.transcript}>
             <h3>Transcript</h3>
-            <div className={styles.transcriptText}>
-              <p>
-                <strong>00:01 Introduction</strong>
-              </p>
-              <p>
-                Hi <span className={styles.blueText}>um</span> everyone. I am
-                really excited to talk to you about our product launch. Yoodli
-                helps you practice and improve your presentation skills without
-                the pressure of an audience,{" "}
-                <span className={styles.darkBlueText}>you know what I mean?</span>{" "}
-                You can get <span className={styles.blueText}>like</span> AI
-                powered feedback on your speech at www.yoodli.ai.
-              </p>
-            </div>
+            {loading ? (
+              <p>Loading transcript...</p>
+            ) : (
+              <div className={styles.transcriptText}>
+                {transcript ? <p>{transcript}</p> : <p><strong>00:01 Introduction</strong></p>}
+              </div>
+            )}
           </div>
-        </div>
+        )}
 
-        {/* Right: Analytics */}
-        <div className={styles.right}>
+        {isRecordingComplete && (
           <div className={styles.analyticsSection}>
-            <h4>Analytics</h4>
-            <div className={styles.analyticsItem}>
-              <strong>Filler Words:</strong> Down by 15%
-            </div>
-            <div className={styles.analyticsItem}>
-              <strong>Eye Contact:</strong> Up by 5% (45% of the time)
-            </div>
-            <div className={styles.analyticsItem}>
-              <strong>Gestures:</strong> Repeated hand movements detected
-            </div>
-            <div className={styles.analyticsItem}>
-              <strong>Uptalk:</strong> Up by 10%
-            </div>
-            <div className={styles.analyticsItem}>
-              <strong>Speech Takeaways:</strong> Large fear of public speaking
+            <div className={styles.analyticsItems}>
+              <h3>Analytics</h3>
+              <div className={styles.analyticsItem}><strong>Filler Words:</strong> Down by 15%</div>
+              <div className={styles.analyticsItem}><strong>Eye Contact:</strong> Up by 5% (45% of the time)</div>
+              <div className={styles.analyticsItem}><strong>Gestures:</strong> Repeated hand movements detected</div>
+              <div className={styles.analyticsItem}><strong>Uptalk:</strong> Up by 10%</div>
+              <div className={styles.analyticsItem}><strong>Speech Takeaways:</strong> Large fear of public speaking</div>
             </div>
           </div>
-        </div>
+        )}
       </div>
+
+      {isRecordingComplete && (
+        <div className={styles.recordButton}>
+          <button onClick={startRecording}>Start Recording</button>
+        </div>
+      )}
     </div>
   );
 };
