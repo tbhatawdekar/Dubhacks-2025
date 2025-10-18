@@ -4,6 +4,9 @@ import Navbar from "./components/navbar";
 export const metadata: Metadata = {
   title: "InterView AI",
   description: "Your personal AI interview coach — analyze and improve your performance with real-time feedback.",
+  icons: {
+    icon: "/favicon.ico",
+  }
 };
 
 export default function RootLayout({
