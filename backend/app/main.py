@@ -24,6 +24,10 @@ app.include_router(transcribe_router, prefix="/api")
 app.include_router(summarize_router, prefix="/api")
 app.include_router(database_router, prefix="/api")
 
+@app.get("/")
+def root():
+    return {"status": "ok"}
+
 @app.get("/health")
 def health():
     return {"ok": True}
