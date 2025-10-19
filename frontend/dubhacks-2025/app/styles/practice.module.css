@@ -38,6 +38,7 @@
   aspect-ratio: 16 / 9;
   background: #000;
   overflow: hidden;
+  height: 93%;
 }
 
 /* Video fills the wrapper */
@@ -234,4 +235,18 @@
 .questionsStart {
   display: flex;
   flex-direction: column;
+}
+
+.startButtonContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.resultsSection {
+  width: 90%;
+  margin-top: 40px;
+  flex-direction: row;
+  display: flex;
+  gap: 15px;
 }

@@ -243,10 +243,12 @@ const Practice: React.FC = () => {
           <div className={styles.questionsStart}>
             <h2>Randomly select or choose an interview question</h2>
             <InterviewQuestions question={question} setQuestion={setQuestion} />
-            <button className={styles.recordButton} onClick={startRecording}>
-              Start Recording
-            </button>
-          </div>
+            <div className={styles.startButtonContainer}>
+              <button className={styles.recordButton} onClick={startRecording}>
+                Start Recording
+              </button>
+            </div>
+        </div>
         )}
 
         {isRecording && !isRecordingComplete && (
@@ -310,7 +312,7 @@ const Practice: React.FC = () => {
         )}
 
         {isRecordingComplete && (
-          <>
+          <div className={styles.resultsSection}>
             <div className={styles.transcript}>
               <h3>Transcript</h3>
               {loading ? (
@@ -374,7 +376,7 @@ const Practice: React.FC = () => {
                 Start Recording
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
