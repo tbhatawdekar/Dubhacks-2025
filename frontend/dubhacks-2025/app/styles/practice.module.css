@@ -1,18 +1,23 @@
+/* NO GLOBAL SELECTORS — pure CSS Modules only */
+
+/* ───────────────── Layout ───────────────── */
 .page {
   font-family: sans-serif;
   background-color: #f9fafb;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  margin-top: 0;      /* remove top white space */
-  padding-top: 0;     /* remove top white space */
+
+  /* Push content below your fixed navbar (adjust if your header is taller/shorter) */
+  padding-top: 72px;
+  margin-top: 0;
 }
 
 .main {
   display: flex;
-  justify-content: center;      /* center content horizontally */
-  padding: 0;                    /* no extra top padding */
-  height: auto;                  /* don't force viewport height */
+  justify-content: center;
+  padding: 0;
+  height: auto;
   flex-direction: row;
   gap: 15px;
 }
@@ -39,7 +44,7 @@
 .videoEl {
   width: 100%;
   height: 100%;
-  object-fit: cover;  /* crops to fill while preserving aspect */
+  object-fit: cover;
   display: block;
 }
 
@@ -52,19 +57,19 @@
   pointer-events: none;
 }
 
-/* Smaller question overlay (same font as banner) */
+/* Question overlay — sits inside the video, small top offset */
 .questionOverlay {
   position: absolute;
-  top: 100px;                     /* tighter to the top */
+  top: 12px;                     /* breathing room inside the video */
   left: 50%;
   transform: translateX(-50%);
   z-index: 6;
 
-  font-family: inherit;         /* match banner font */
+  font-family: inherit;
   font-weight: 700;
   font-size: clamp(16px, 2.4vw, 22px);
   line-height: 1.2;
-  margin: 0;                    /* remove default h2 margin */
+  margin: 0;
 
   color: #fff;
   text-align: center;
@@ -80,7 +85,7 @@
 /* Controls pinned bottom-left (aligned to HUD) */
 .controlsBarLeft {
   position: absolute;
-  left: 16px;                   /* aligns with HUD's left */
+  left: 16px;
   bottom: 16px;
   display: flex;
   gap: 10px;
@@ -118,10 +123,10 @@
   z-index: 4;
 }
 
-/* "Recording..." pill up top center */
+/* "Recording..." pill up top center (inside the video) */
 .recordingPill {
   position: absolute;
-  top: 14px;  /* slightly tighter than before */
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
   color: #fff;
@@ -133,9 +138,10 @@
 @media (max-width: 640px) {
   .hudBox { bottom: 112px; }
   .controlsBarLeft { left: 12px; bottom: 12px; gap: 8px; }
-  .questionOverlay { top: 6px; padding: 6px 10px; }
+  .questionOverlay { top: 10px; padding: 6px 10px; }
 }
 
+/* ─────────────── Results / Panels ─────────────── */
 .transcript {
   width: 45%;
   height: fit-content;
@@ -170,6 +176,7 @@
 .analyticsItems { gap: 10px; }
 .analyticsItem { margin-bottom: 8px; }
 
+/* Buttons */
 .recordButton {
   background-color: #3b82f6;
   color: white;
@@ -204,7 +211,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 72px); /* header offset (same as .page padding) */
   width: 100%;
 }
 

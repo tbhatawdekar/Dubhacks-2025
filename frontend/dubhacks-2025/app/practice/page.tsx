@@ -262,14 +262,14 @@ const Practice: React.FC = () => {
                 className={styles.overlayCanvas}
               />
 
-              {/* Question overlay */}
+              {/* Question overlay (smaller, disappears as you scroll) */}
               {question && (
                 <h2 className={styles.questionOverlay} title={question}>
                   {question}
                 </h2>
               )}
 
-              {/* HUD */}
+              {/* Emotion HUD (bottom-left) */}
               <div className={styles.hudBox}>
                 <div style={{ fontWeight: 700 }}>
                   {faceStatus.emotion.toUpperCase()} • {(faceStatus.confidence * 100).toFixed(0)}%
@@ -290,8 +290,8 @@ const Practice: React.FC = () => {
                 )}
               </div>
 
-              {/* Controls */}
-              <div className={styles.controlsBar}>
+              {/* Controls — NOW bottom-left, aligned to HUD */}
+              <div className={styles.controlsBarLeft}>
                 <button className={styles.recordButton} onClick={pauseRecording}>
                   {isPaused ? "Resume" : "Pause"}
                 </button>
@@ -305,6 +305,7 @@ const Practice: React.FC = () => {
 
               {!isPaused && <p className={styles.recordingPill}>Recording...</p>}
             </div>
+
           </div>
         )}
 
