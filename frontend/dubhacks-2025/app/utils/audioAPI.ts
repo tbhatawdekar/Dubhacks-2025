@@ -3,7 +3,8 @@ const API = "http://localhost:5000"; // adjust for production
 
 export async function transcribeAudio(blob: Blob) {
   const form = new FormData();
-  form.append("file", blob, "answer.webm");
+  const file = new File([blob], "answer.webm", { type: "audio/webm" });
+  form.append("file", file);
 
   const res = await fetch(`${API}/api/transcribe`, {
     method: "POST",
