@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import InterviewQuestions from "../components/questions";
 import styles from "../styles/practice.module.css";
 import { transcribeAudio, summarizeTranscript } from "../utils/audioAPI";
 
@@ -12,6 +13,7 @@ type AnalysisResponse = {
 
 const Practice: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
+  const [question, setQuestion] = useState("");
   const [isPaused, setIsPaused] = useState(false);
   const [isRecordingComplete, setIsRecordingComplete] = useState(false);
   const [chunks, setChunks] = useState<Blob[]>([]);
@@ -34,6 +36,7 @@ const Practice: React.FC = () => {
     setTranscript("");
     setAnalysis(null);
     setAnalysisLoading(false);
+    console.log({question})
 
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
     streamRef.current = stream;
@@ -122,41 +125,46 @@ const Practice: React.FC = () => {
     <div className={styles.page}>
       <div className={styles.main}>
         {!isRecording && !isRecordingComplete && (
-          <div>
+          <div className={styles.questionsStart}>
+            <h2>Randomly select or choose an interview question</h2>
+            <InterviewQuestions question={question} setQuestion={setQuestion} />
             <button className={styles.recordButton} onClick={startRecording}>Start Recording</button>
           </div>
         )}
 
         {isRecording && !isRecordingComplete && (
-          <div className={styles.camera} style={{ position: "relative" }}>
-            <video
-              ref={videoRef}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              muted
-            />
-            {/* Overlay buttons */}
-            <div style={{
-              position: "absolute",
-              bottom: "20px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              display: "flex",
-              gap: "10px"
-            }}>
-              <button className={styles.recordButton}  onClick={pauseRecording}>{isPaused ? "Resume" : "Pause"}</button>
-              <button className={styles.recordButton} onClick={stopRecording}>Stop</button>
-              <button className={styles.recordButton} onClick={rerecord}>Rerecord</button>
+          <div>
+            <p>Question: {question}</p>
+            <div className={styles.camera} style={{ position: "relative" }}>
+              <video
+                ref={videoRef}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                muted
+              />
+              {/* Overlay buttons */}
+              <div style={{
+                position: "absolute",
+                bottom: "20px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                display: "flex",
+                gap: "10px"
+              }}>
+                <button className={styles.recordButton}  onClick={pauseRecording}>{isPaused ? "Resume" : "Pause"}</button>
+                <button className={styles.recordButton} onClick={stopRecording}>Stop</button>
+                <button className={styles.recordButton} onClick={rerecord}>Rerecord</button>
+              </div>
+              <p style={{
+                position: "absolute",
+                top: "20px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                color: "white",
+                fontWeight: "bold"
+              }}>
+                Recording...
+              </p>
             </div>
-            <p style={{
-              position: "absolute",
-              top: "20px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              color: "white",
-              fontWeight: "bold"
-            }}>
-              Recording...
-            </p>
           </div>
         )}
 
