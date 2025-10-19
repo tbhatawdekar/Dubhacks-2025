@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from .config import ALLOWED_ORIGINS
 from .routers.transcribe import router as transcribe_router
 from .routers.summarize import router as summarize_router
+from .routers.analyze_video import router as analyze_router
+app.include_router(analyze_router, prefix="/api")
+
 
 app = FastAPI(
     title="Smart Interview Coach",
