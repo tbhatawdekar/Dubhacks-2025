@@ -1,0 +1,37 @@
+.questionsContainer {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.questionRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.questionDropdown {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.shuffleButton {
+  background-color: #1e40af; /* Spotify green */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.shuffleButton:hover {
+  background-color: #17a84b;
+}
+
+.selectedQuestion {
+  margin-top: 10px;
+  font-style: italic;
+}

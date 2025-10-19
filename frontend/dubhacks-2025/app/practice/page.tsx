@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
+import InterviewQuestions from "../components/questions";
 import styles from "../styles/practice.module.css";
 import { transcribeAudio, summarizeTranscript } from "../utils/audioAPI";
 
@@ -18,6 +19,7 @@ type AnalysisResponse = {
 
 const Practice: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
+  const [question, setQuestion] = useState("");
   const [isPaused, setIsPaused] = useState(false);
   const [isRecordingComplete, setIsRecordingComplete] = useState(false);
   const [chunks, setChunks] = useState<Blob[]>([]);
@@ -50,6 +52,7 @@ const Practice: React.FC = () => {
     setTranscript("");
     setAnalysis(null);
     setAnalysisLoading(false);
+    console.log({question})
 
     // camera stream (audio + video)
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: { width: 640, height: 480 } });
@@ -220,55 +223,72 @@ const Practice: React.FC = () => {
     <div className={styles.page}>
       <div className={styles.main}>
         {!isRecording && !isRecordingComplete && (
-          <div>
+          <div className={styles.questionsStart}>
+            <h2>Randomly select or choose an interview question</h2>
+            <InterviewQuestions question={question} setQuestion={setQuestion} />
             <button className={styles.recordButton} onClick={startRecording}>Start Recording</button>
           </div>
         )}
 
         {isRecording && !isRecordingComplete && (
-          <div className={styles.camera} style={{ position: "relative" }}>
-            <video
-              ref={videoRef}
-              style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 8 }}
-              muted
-              playsInline
-            />
-            <canvas
-              ref={canvasRef}
-              width={640}
-              height={480}
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
-            />
-            <div style={{
-              position: "absolute", bottom: 12, left: 12,
-              background: "rgba(0,0,0,0.55)", color: "white",
-              padding: "6px 10px", borderRadius: 8, fontSize: 12
-            }}>
-              {faceStatus.emotion.toUpperCase()} — 👁 {faceStatus.leftOpen.toFixed(2)} / {faceStatus.rightOpen.toFixed(2)}
-            </div>
+          <div>
+            <p>Question: {question}</p>
+            <div className={styles.camera} style={{ position: "relative" }}>
+              <video
+                ref={videoRef}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                muted
+              />
+              {/* Overlay buttons */}
+              <div style={{
+                position: "absolute",
+                bottom: "20px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                display: "flex",
+                gap: "10px"
+              }}>
+                <button className={styles.recordButton}  onClick={pauseRecording}>{isPaused ? "Resume" : "Pause"}</button>
+                <button className={styles.recordButton} onClick={stopRecording}>Stop</button>
+                <button className={styles.recordButton} onClick={rerecord}>Rerecord</button>
+              </div>
+              <p style={{
+                position: "absolute",
+                top: "20px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                color: "white",
+                fontWeight: "bold"
+              }}>
+                Recording...
+              </p>
+              <canvas
+                ref={canvasRef}
+                width={640}
+                height={480}
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+              />
+              <div style={{
+                position: "absolute", bottom: 12, left: 12,
+                background: "rgba(0,0,0,0.55)", color: "white",
+                padding: "6px 10px", borderRadius: 8, fontSize: 12
+              }}>
+                {faceStatus.emotion.toUpperCase()} — 👁 {faceStatus.leftOpen.toFixed(2)} / {faceStatus.rightOpen.toFixed(2)}
+              </div>
 
-            <div style={{
-              position: "absolute",
-              bottom: "20px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              display: "flex",
-              gap: "10px"
-            }}>
-              <button className={styles.recordButton}  onClick={pauseRecording}>{isPaused ? "Resume" : "Pause"}</button>
-              <button className={styles.recordButton} onClick={stopRecording}>Stop</button>
-              <button className={styles.recordButton} onClick={rerecord}>Rerecord</button>
+              <div style={{
+                position: "absolute",
+                bottom: "20px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                display: "flex",
+                gap: "10px"
+              }}>
+                <button className={styles.recordButton}  onClick={pauseRecording}>{isPaused ? "Resume" : "Pause"}</button>
+                <button className={styles.recordButton} onClick={stopRecording}>Stop</button>
+                <button className={styles.recordButton} onClick={rerecord}>Rerecord</button>
+              </div>
             </div>
-            <p style={{
-              position: "absolute",
-              top: "20px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              color: "white",
-              fontWeight: "bold"
-            }}>
-              Recording...
-            </p>
           </div>
         )}
 

@@ -1,5 +1,4 @@
-import Link from "next/link";
-import styles from "./page.module.css";
+import styles from "../styles/dashboard.module.css";
 
 export default function dashboard() {
   return (
