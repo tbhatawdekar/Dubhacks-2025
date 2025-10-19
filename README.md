@@ -63,4 +63,4 @@ This is our hackathon project for DubHacks 2025.
 
 ## Troubleshooting
   - ```npm run dev``` freezes at ```Starting...```
-    - clear the npm cache (``` Remove-Item -Recurse -Force .next```)
+    - clear the npm cache (```Remove-Item -Recurse -Force .next```)

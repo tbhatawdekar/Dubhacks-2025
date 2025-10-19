@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./styles/page.module.css";
+import { Sparkles } from "lucide-react";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
             fontSize: 14,
             fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
           }}>
+            <Sparkles />
             AI-Powered Interview Coaching
           </span>
         </div>
@@ -29,7 +31,7 @@ export default function Home() {
         Ace Your Next Interview with AI Feedback
       </h1>
         <p className={styles.subtitle}style={{ fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}
-        >Get ready for an amazing hackathon experience!</p>
+        >Get ready for an amazing interview experience!</p>
 
         <div className={styles.buttonRow}>
           <Link href="/practice" className={styles.primaryButton}
