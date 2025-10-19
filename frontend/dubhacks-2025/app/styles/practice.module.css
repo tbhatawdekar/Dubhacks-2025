@@ -1,28 +1,147 @@
+/* NO GLOBAL SELECTORS — pure CSS Modules only */
+
+/* ───────────────── Layout ───────────────── */
 .page {
   font-family: sans-serif;
   background-color: #f9fafb;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  margin-top: 100px;
+
+  /* Push content below your fixed navbar (adjust if your header is taller/shorter) */
+  padding-top: 72px;
+  margin-top: 0;
 }
 
 .main {
   display: flex;
-  justify-content: center; /* center content horizontally */
-  padding: 24px;
-  height: calc(100vh - 100px); /* account for header */
-  flex-direction: row; /* stack vertically if needed */
+  justify-content: center;
+  padding: 0;
+  height: auto;
+  flex-direction: row;
   gap: 15px;
 }
 
 .camera {
   width: 90%;
-  height: 90%; /* fixed height */
+  height: 90%;
   background-color: #3b82f6;
   border-radius: 8px;
 }
 
+/* === Full-bleed camera section === */
+.cameraFullBleed {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  aspect-ratio: 16 / 9;
+  background: #000;
+  overflow: hidden;
+}
+
+/* Video fills the wrapper */
+.videoEl {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Canvas overlay matches video box */
+.overlayCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Question overlay — sits inside the video, small top offset */
+.questionOverlay {
+  position: absolute;
+  top: 12px;                     /* breathing room inside the video */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+
+  font-family: inherit;
+  font-weight: 700;
+  font-size: clamp(16px, 2.4vw, 22px);
+  line-height: 1.2;
+  margin: 0;
+
+  color: #fff;
+  text-align: center;
+  max-width: min(92vw, 1100px);
+  padding: 8px 12px;
+
+  background: rgba(0,0,0,0.35);
+  border-radius: 10px;
+  backdrop-filter: blur(3px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+
+/* Controls pinned bottom-left (aligned to HUD) */
+.controlsBarLeft {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  gap: 10px;
+  z-index: 5;
+}
+
+/* Keep old center controls style in case it's still referenced */
+.controlsBar {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 16px;
+  display: flex;
+  gap: 10px;
+  z-index: 5;
+}
+
+/* Prevent record buttons from auto-centering inside control bars */
+.controlsBarLeft .recordButton,
+.controlsBar .recordButton {
+  margin: 0;
+}
+
+/* HUD pinned bottom-left, lifted so it doesn't overlap controls */
+.hudBox {
+  position: absolute;
+  left: 16px;
+  bottom: 96px;  /* clearance above controls */
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  min-width: 220px;
+  z-index: 4;
+}
+
+/* "Recording..." pill up top center (inside the video) */
+.recordingPill {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+}
+
+/* Responsive tweak: on small screens, give a bit more lift */
+@media (max-width: 640px) {
+  .hudBox { bottom: 112px; }
+  .controlsBarLeft { left: 12px; bottom: 12px; gap: 8px; }
+  .questionOverlay { top: 10px; padding: 6px 10px; }
+}
+
+/* ─────────────── Results / Panels ─────────────── */
 .transcript {
   width: 45%;
   height: fit-content;
@@ -38,13 +157,8 @@
   line-height: 1.5;
 }
 
-.blueText {
-  color: #60a5fa;
-}
-
-.darkBlueText {
-  color: #3b82f6;
-}
+.blueText { color: #60a5fa; }
+.darkBlueText { color: #3b82f6; }
 
 .analyticsSection {
   flex: 1;
@@ -59,16 +173,12 @@
   line-height: 1.5;
 }
 
-.analyticsItems {
-  gap: 10px;
-}
+.analyticsItems { gap: 10px; }
+.analyticsItem { margin-bottom: 8px; }
 
-.analyticsItem {
-  margin-bottom: 8px;
-}
-
+/* Buttons */
 .recordButton {
-  background-color: #3b82f6; /* blue button */
+  background-color: #3b82f6;
   color: white;
   font-size: 18px;
   font-weight: 500;
@@ -77,20 +187,22 @@
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  margin-bottom: 16px; /* space from main content */
+  margin-bottom: 16px;
   padding: 14px 28px;
   width: fit-content;
+
+  /* default centering for standalone buttons */
   margin-left: auto;
   margin-right: auto;
 }
 
 .recordButton:hover {
-  background-color: #2563eb; /* darker blue on hover */
+  background-color: #2563eb;
   transform: translateY(-1px);
 }
 
 .recordButton:active {
-  background-color: #1d4ed8; /* even darker on click */
+  background-color: #1d4ed8;
   transform: translateY(0px);
 }
 
@@ -99,7 +211,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 72px); /* header offset (same as .page padding) */
   width: 100%;
 }
 
