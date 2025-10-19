@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styles from "./page.module.css";
+import styles from "./dashboard.module.css";
 
 export default function dashboard() {
   return (
