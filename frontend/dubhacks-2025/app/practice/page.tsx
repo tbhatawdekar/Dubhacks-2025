@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import InterviewQuestions from "../components/questions";
 import styles from "../styles/practice.module.css";
 import { transcribeAudio, summarizeTranscript } from "../utils/audioAPI";
@@ -252,16 +252,18 @@ const Practice: React.FC = () => {
                 <button className={styles.recordButton} onClick={stopRecording}>Stop</button>
                 <button className={styles.recordButton} onClick={rerecord}>Rerecord</button>
               </div>
-              <p style={{
-                position: "absolute",
-                top: "20px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                color: "white",
-                fontWeight: "bold"
-              }}>
-                Recording...
-              </p>
+              {!isPaused && (
+                <p style={{
+                  position: "absolute",
+                  top: "20px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  color: "white",
+                  fontWeight: "bold"
+                }}>
+                  Recording...
+                </p>
+              )}
               <canvas
                 ref={canvasRef}
                 width={640}
