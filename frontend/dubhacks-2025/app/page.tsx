@@ -34,7 +34,7 @@ export default function Home() {
         <div className={styles.buttonRow}>
           <Link href="/practice" className={styles.primaryButton}
           style={{ fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>Start Practicing</Link>
-          <Link href="#learn" className={styles.secondaryButton}
+          <Link href="/about" className={styles.secondaryButton}
           style={{ fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>Learn More</Link>
         </div>
       </section>

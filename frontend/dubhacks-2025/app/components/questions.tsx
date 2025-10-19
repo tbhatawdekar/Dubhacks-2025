@@ -1,21 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Shuffle } from "lucide-react";
+import { getInterviewQuestions } from "../utils/backendAPI";
 
 import styles from "../styles/questions.module.css"; 
 
-const QUESTIONS = [
-  "Tell me about yourself.",
-  "What’s your biggest strength?",
-  "What’s your biggest weakness?",
-  "Describe a time you overcame a challenge.",
-  "Why do you want to work here?",
-  "Tell me about a time you led a team.",
-  "Where do you see yourself in 5 years?",
-];
+const QUESTIONS: string[] = await getInterviewQuestions();
 
 const InterviewQuestions: React.FC<{ question: string; setQuestion: (q: string) => void }> = ({ question, setQuestion }) => {
+  useEffect(() => {
+    if (!question) {
+      setQuestion(QUESTIONS[0]);
+    }
+  }, []);
+
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setQuestion(e.target.value);
   };

@@ -48,3 +48,15 @@ export async function analyzeAudio(blob: Blob) {
 
   return res.json(); // { transcript, main_points, feedback, metrics }
 }
+
+export async function getInterviewQuestions() {
+  const res = await fetch(`${API}/api/get-questions`, {
+    method: "GET",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch interview questions");
+  }
+
+  return res.json();
+}

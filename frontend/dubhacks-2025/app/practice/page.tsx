@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import InterviewQuestions from "../components/questions";
 import styles from "../styles/practice.module.css";
-import { transcribeAudio, summarizeTranscript } from "../utils/audioAPI";
+import { transcribeAudio, summarizeTranscript } from "../utils/backendAPI";
 
 import {
   FaceLandmarker,
