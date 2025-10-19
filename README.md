@@ -42,24 +42,6 @@ This is our hackathon project for DubHacks 2025.
 
 - Could be used by students, job‑seekers, people switching careers, non‑native speakers.
 
-- At hackathon scale you can build a prototype (web app + ML models) that has “wow” factor: see yourself on camera, get instant feedback, show improvements.
-
-- Ties into current trends: video conferencing, remote hiring, AI/ML tools for personal development.
-
-- Technical considerations / MVP scope for hackathon
-
-- Choose one or two strong features to build: e.g., audio filler‑word detection + basic visual gaze/posture detection.
-
-- Use existing pretrained models for face keypoints, head orientation, gesture recognition (OpenCV, MediaPipe, etc.). For audio, maybe use speech‑to‑text + count filler words, plus basic voice features (pitch, volume).
-
-
-### For mock questions you can have a fixed set to keep it simple.
-  - Build a front‑end web interface (React) or simple Node + WebRTC for webcam/mic capture.
-  - Real‑time vs post‑recording: post‑recording is simpler for hackathon.
-  - Use a dashboard with charts, scores, transcripts.
-  - Make sure to cover privacy/consent (video + audio).
-  - Prepare a crisp demo: show before/after improvement metric or a “bad vs good” session.
-  - Optional: allow upload of previous session and compare side‑by‑side.
 
 ## Troubleshooting
   - ```npm run dev``` freezes at ```Starting...```
