@@ -25,8 +25,9 @@ export default function Navbar() {
             <Image
               src={logo}
               alt="InterView AI Logo"
-              fill
               className={styles.logo}
+              width={150}
+              height={150}
             />
           </div>
         </Link>
