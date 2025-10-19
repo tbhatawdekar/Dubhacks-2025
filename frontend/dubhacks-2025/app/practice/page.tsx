@@ -345,12 +345,23 @@ const Practice: React.FC = () => {
                       <div className={styles.analyticsItem}>
                         <strong>Metrics</strong>
                         <ul>
-                          {Object.entries(analysis.metrics).map(([k, v]) => (
-                            <li key={k}>{k}: {String(v)}</li>
-                          ))}
+                          {Object.entries(analysis.metrics).map(([k, v]) => {
+                            const prettyNames: Record<string, string> = {
+                              filler_count: "Filler Words",
+                              hedge_count: "Hesitation Words",
+                              // Add more mappings here if needed
+                            };
+
+                            const label = prettyNames[k] || k;
+                            return (
+                              <li key={k}>
+                                {label}: {String(v)}
+                              </li>
+                            );
+                          })}
                         </ul>
                       </div>
-                    )}
+                  )}
                   </>
                 ) : (
                   <div className={styles.analyticsItem}>No analysis yet.</div>
