@@ -1,10 +1,43 @@
+import Link from "next/link";
 import styles from "./page.module.css";
 
 export default function Home() {
   return (
     <main className={styles.main}>
-      <h1>Welcome to Dubhacks 2025</h1>
-      <p>Get ready for an amazing hackathon experience!</p>
+      <section className={styles.hero}>
+        <div>
+          <span style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 14px",
+            borderRadius: 999,
+            background: "rgba(59,130,246,0.10)",
+            color: "#1e40af",
+            fontWeight: 600,
+            fontSize: 14,
+            fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+          }}>
+            AI-Powered Interview Coaching
+          </span>
+        </div>
+
+        <h1
+      className={styles.title}
+        style={{ fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}
+        >
+        Ace Your Next Interview with AI Feedback
+      </h1>
+        <p className={styles.subtitle}style={{ fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}
+        >Get ready for an amazing hackathon experience!</p>
+
+        <div className={styles.buttonRow}>
+          <Link href="/practice" className={styles.primaryButton}
+          style={{ fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>Start Practicing</Link>
+          <Link href="#learn" className={styles.secondaryButton}
+          style={{ fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}>Learn More</Link>
+        </div>
+      </section>
     </main>
   );
 }

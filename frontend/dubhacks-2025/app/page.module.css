@@ -6,14 +6,10 @@
   --button-primary-hover: #383838;
   --button-secondary-hover: #f2f2f2;
 
-  display: grid;
-  grid-template-rows: 20px 1fr 20px;
-  align-items: center;
-  justify-items: center;
+  display: block;
   min-height: 100svh;
-  padding: 80px;
-  gap: 64px;
-  font-family: var(--font-geist-sans);
+  padding: 0 24px;
+  font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,9 +26,80 @@
 .main {
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  grid-row-start: 2;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  min-height: calc(100vh - 100px); /* account for navbar height */
+  margin-top: 100px; /* push below navbar */
 }
+
+/* Hero layout */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  max-width: 960px;
+}
+
+.title {
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-size: clamp(40px, 6vw, 72px);
+}
+
+.subtitle {
+  font-size: clamp(16px, 2.2vw, 20px);
+  color: rgba(var(--gray-rgb), 0.6);
+  max-width: 900px;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 16px;
+}
+
+.primaryButton {
+  background-color: #3b82f6;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  padding: 14px 28px;
+  min-width: 220px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primaryButton:hover { background-color: #2563eb; transform: translateY(-1px); }
+.primaryButton:active { background-color: #1d4ed8; transform: translateY(0); }
+
+.secondaryButton {
+  background-color: #ffffff;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 500;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  padding: 14px 28px;
+  min-width: 160px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.secondaryButton:hover { background-color: #f3f4f6; }
 
 .main ol {
   font-family: var(--font-geist-mono);
@@ -127,31 +194,23 @@ a.secondary {
 
 @media (max-width: 600px) {
   .page {
-    padding: 32px;
-    padding-bottom: 80px;
+    padding: 32px 16px 80px 16px;
   }
 
   .main {
     align-items: center;
   }
 
+  .title {
+    font-size: clamp(32px, 8vw, 48px);
+  }
+
   .main ol {
     text-align: center;
   }
 
-  .ctas {
-    flex-direction: column;
-  }
-
-  .ctas a {
-    font-size: 14px;
-    height: 40px;
-    padding: 0 16px;
-  }
-
-  a.secondary {
-    min-width: auto;
-  }
+  .buttonRow { flex-direction: column; }
+  .primaryButton, .secondaryButton { width: 100%; min-width: 0; }
 
   .footer {
     flex-wrap: wrap;
