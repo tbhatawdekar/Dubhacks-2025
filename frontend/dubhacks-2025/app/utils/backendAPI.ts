@@ -1,5 +1,5 @@
 // utils/audioAPI.ts
-const API = "http://localhost:5000"; // adjust for production
+const API = "http://dubhacks-api-env.eba-cd7p6ibt.us-west-2.elasticbeanstalk.com"; // adjust for production
 
 export async function transcribeAudio(blob: Blob) {
   const form = new FormData();
