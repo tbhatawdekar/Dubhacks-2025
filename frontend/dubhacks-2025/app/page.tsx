@@ -29,7 +29,7 @@ export default function Home() {
         Ace Your Next Interview with AI Feedback
       </h1>
         <p className={styles.subtitle}style={{ fontFamily: "'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}
-        >Get ready for an amazing hackathon experience!</p>
+        >Simple. Streamlined. Your new favorite AI assistant. </p>
 
         <div className={styles.buttonRow}>
           <Link href="/practice" className={styles.primaryButton}
