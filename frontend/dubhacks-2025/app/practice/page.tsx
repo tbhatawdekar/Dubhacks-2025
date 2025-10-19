@@ -2,7 +2,13 @@
 
 import React, { useState, useRef } from "react";
 import styles from "../styles/practice.module.css";
-import { transcribeAudio } from "../utils/audioAPI";
+import { transcribeAudio, summarizeTranscript } from "../utils/audioAPI";
+
+type AnalysisResponse = {
+  main_points: string[];
+  feedback: string[];
+  metrics?: Record<string, unknown> | null;
+};
 
 const Practice: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -11,6 +17,8 @@ const Practice: React.FC = () => {
   const [chunks, setChunks] = useState<Blob[]>([]);
   const [transcript, setTranscript] = useState("this is the og transcript");
   const [loading, setLoading] = useState(false);
+  const [analysis, setAnalysis] = useState<AnalysisResponse | null>(null);
+  const [analysisLoading, setAnalysisLoading] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -24,6 +32,8 @@ const Practice: React.FC = () => {
     setChunks([]);
     chunksRef.current = [];
     setTranscript("");
+    setAnalysis(null);
+    setAnalysisLoading(false);
 
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
     streamRef.current = stream;
@@ -88,10 +98,22 @@ const Practice: React.FC = () => {
     try {
       const data = await transcribeAudio(blob);
       setTranscript(data.transcript);
+      setLoading(false);
+
+      // Kick off summarize
+      setAnalysis(null);
+      setAnalysisLoading(true);
+      try {
+        const summary = await summarizeTranscript(data.transcript);
+        setAnalysis(summary);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setAnalysisLoading(false);
+      }
     } catch (err) {
       console.error(err);
       alert("Service busy; please retry.");
-    } finally {
       setLoading(false);
     }
   };
@@ -154,11 +176,36 @@ const Practice: React.FC = () => {
             <div className={styles.analyticsSection}>
               <div className={styles.analyticsItems}>
                 <h3>Analytics</h3>
-                <div className={styles.analyticsItem}><strong>Filler Words:</strong> Down by 15%</div>
-                <div className={styles.analyticsItem}><strong>Eye Contact:</strong> Up by 5% (45% of the time)</div>
-                <div className={styles.analyticsItem}><strong>Gestures:</strong> Repeated hand movements detected</div>
-                <div className={styles.analyticsItem}><strong>Uptalk:</strong> Up by 10%</div>
-                <div className={styles.analyticsItem}><strong>Speech Takeaways:</strong> Large fear of public speaking</div>
+                {analysisLoading ? (
+                  <div className={styles.analyticsItem}>Analyzing...</div>
+                ) : analysis ? (
+                  <>
+                    <div className={styles.analyticsItem}><strong>Main Points</strong></div>
+                    <ul>
+                      {analysis.main_points?.map((p, i) => (
+                        <li key={`mp-${i}`}>{p}</li>
+                      ))}
+                    </ul>
+                    <div className={styles.analyticsItem}><strong>Feedback</strong></div>
+                    <ul>
+                      {analysis.feedback?.map((f, i) => (
+                        <li key={`fb-${i}`}>{f}</li>
+                      ))}
+                    </ul>
+                    {analysis.metrics && (
+                      <div className={styles.analyticsItem}>
+                        <strong>Metrics</strong>
+                        <ul>
+                          {Object.entries(analysis.metrics).map(([k, v]) => (
+                            <li key={k}>{k}: {String(v)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className={styles.analyticsItem}>No analysis yet.</div>
+                )}
               </div>
             </div>
 
