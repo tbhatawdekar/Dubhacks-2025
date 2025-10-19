@@ -15,12 +15,14 @@ const Practice: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
 
   const startRecording = async () => {
     setIsRecording(true);
     setIsRecordingComplete(false);
     setIsPaused(false);
     setChunks([]);
+    chunksRef.current = [];
     setTranscript("");
 
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
@@ -36,6 +38,7 @@ const Practice: React.FC = () => {
 
     mediaRecorderRef.current.ondataavailable = (event) => {
       if (event.data.size > 0) {
+        chunksRef.current.push(event.data);
         setChunks((prev) => [...prev, event.data]);
       }
     };
@@ -62,16 +65,24 @@ const Practice: React.FC = () => {
     setIsRecording(false);
     setIsPaused(false);
     setChunks([]);
+    chunksRef.current = [];
     setTranscript("");
   };
 
   const stopRecording = async () => {
     setIsRecording(false);
     setIsRecordingComplete(true);
-    mediaRecorderRef.current?.stop();
+    const mr = mediaRecorderRef.current;
+    if (mr && mr.state !== "inactive") {
+      const stopped = new Promise<void>((resolve) => {
+        mr.addEventListener("stop", () => resolve(), { once: true });
+      });
+      mr.stop();
+      await stopped; // ensure final dataavailable has fired
+    }
     streamRef.current?.getTracks().forEach((track) => track.stop());
 
-    const blob = new Blob(chunks, { type: "audio/webm;codecs=opus" });
+    const blob = new Blob(chunksRef.current, { type: "audio/webm" });
     setLoading(true);
 
     try {
