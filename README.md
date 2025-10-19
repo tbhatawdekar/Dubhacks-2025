@@ -60,3 +60,7 @@ This is our hackathon project for DubHacks 2025.
   - Make sure to cover privacy/consent (video + audio).
   - Prepare a crisp demo: show before/after improvement metric or a “bad vs good” session.
   - Optional: allow upload of previous session and compare side‑by‑side.
+
+## Troubleshooting
+  - ```npm run dev``` freezes at ```Starting...```
+    - clear the npm cache (``` Remove-Item -Recurse -Force .next```)
