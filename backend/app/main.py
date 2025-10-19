@@ -1,5 +1,7 @@
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+import os
 
 from .config import ALLOWED_ORIGINS
 from .routers.transcribe import router as transcribe_router
@@ -31,3 +33,7 @@ def root():
 @app.get("/health")
 def health():
     return {"ok": True}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # EB sets PORT automatically
+    uvicorn.run(app, host="0.0.0.0", port=port)
