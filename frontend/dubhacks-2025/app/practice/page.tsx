@@ -88,7 +88,13 @@ const Practice: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.main}>
-        {!isRecordingComplete ? (
+        {!isRecording && !isRecordingComplete && (
+          <div>
+            <button className={styles.recordButton} onClick={startRecording}>Start Recording</button>
+          </div>
+        )}
+
+        {isRecording && !isRecordingComplete && (
           <div className={styles.camera} style={{ position: "relative" }}>
             <video
               ref={videoRef}
@@ -104,9 +110,9 @@ const Practice: React.FC = () => {
               display: "flex",
               gap: "10px"
             }}>
-              <button onClick={pauseRecording}>{isPaused ? "Resume" : "Pause"}</button>
-              <button onClick={stopRecording}>Stop</button>
-              <button onClick={rerecord}>Rerecord</button>
+              <button className={styles.recordButton}  onClick={pauseRecording}>{isPaused ? "Resume" : "Pause"}</button>
+              <button className={styles.recordButton} onClick={stopRecording}>Stop</button>
+              <button className={styles.recordButton} onClick={rerecord}>Rerecord</button>
             </div>
             <p style={{
               position: "absolute",
@@ -119,38 +125,38 @@ const Practice: React.FC = () => {
               Recording...
             </p>
           </div>
-        ) : (
-          <div className={styles.transcript}>
-            <h3>Transcript</h3>
-            {loading ? (
-              <p>Loading transcript...</p>
-            ) : (
-              <div className={styles.transcriptText}>
-                {transcript ? <p>{transcript}</p> : <p><strong>00:01 Introduction</strong></p>}
-              </div>
-            )}
-          </div>
         )}
 
         {isRecordingComplete && (
-          <div className={styles.analyticsSection}>
-            <div className={styles.analyticsItems}>
-              <h3>Analytics</h3>
-              <div className={styles.analyticsItem}><strong>Filler Words:</strong> Down by 15%</div>
-              <div className={styles.analyticsItem}><strong>Eye Contact:</strong> Up by 5% (45% of the time)</div>
-              <div className={styles.analyticsItem}><strong>Gestures:</strong> Repeated hand movements detected</div>
-              <div className={styles.analyticsItem}><strong>Uptalk:</strong> Up by 10%</div>
-              <div className={styles.analyticsItem}><strong>Speech Takeaways:</strong> Large fear of public speaking</div>
+          <>
+            <div className={styles.transcript}>
+              <h3>Transcript</h3>
+              {loading ? (
+                <p>Loading transcript...</p>
+              ) : (
+                <div className={styles.transcriptText}>
+                  {transcript ? <p>{transcript}</p> : <p><strong>00:01 Introduction</strong></p>}
+                </div>
+              )}
             </div>
-          </div>
+
+            <div className={styles.analyticsSection}>
+              <div className={styles.analyticsItems}>
+                <h3>Analytics</h3>
+                <div className={styles.analyticsItem}><strong>Filler Words:</strong> Down by 15%</div>
+                <div className={styles.analyticsItem}><strong>Eye Contact:</strong> Up by 5% (45% of the time)</div>
+                <div className={styles.analyticsItem}><strong>Gestures:</strong> Repeated hand movements detected</div>
+                <div className={styles.analyticsItem}><strong>Uptalk:</strong> Up by 10%</div>
+                <div className={styles.analyticsItem}><strong>Speech Takeaways:</strong> Large fear of public speaking</div>
+              </div>
+            </div>
+
+            <div>
+              <button className={styles.recordButton} onClick={startRecording}>Start Recording</button>
+            </div>
+          </>
         )}
       </div>
-
-      {isRecordingComplete && (
-        <div className={styles.recordButton}>
-          <button onClick={startRecording}>Start Recording</button>
-        </div>
-      )}
     </div>
   );
 };
